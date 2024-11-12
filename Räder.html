@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Überlagerte Bilder drehen mit Bedingtem Text</title>
+    <style>
+        /* Gesamten Hintergrund schwarz machen und Textfarbe weiß setzen */
+        body {
+            background-color: black; /* Schwarzer Hintergrund */
+            color: white; /* Weißer Text */
+        }
+
+        /* Container für die übereinanderliegenden Bilder */
+        .image-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 20px auto;
+        }
+
+        /* Bilder im Container übereinander platzieren, mit Reihenfolge (z-index) */
+        .image-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.3; /* Transparenzwert */
+            transition: transform 0.3s;
+        }
+
+        /* Sicherstellen, dass Bild 1 im Vordergrund ist */
+        #bild1 {
+            z-index: 3;
+        }
+
+        /* Sicherstellen, dass Bild 2 und Bild 3 im Hintergrund sind */
+        #bild2 {
+            z-index: 2;
+        }
+
+        #bild3 {
+            z-index: 1;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin: 10px;
+        }
+
+        button {
+            margin: 5px;
+            padding: 10px;
+            background-color: #333; /* Dunkler Button-Hintergrund */
+            color: white; /* Weißer Text auf Buttons */
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #555; /* Etwas hellere Farbe bei Hover */
+        }
+
+        /* Text, der bei erfüllten Bedingungen angezeigt wird */
+        #hiddenText {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            color: lightgreen; /* Kontrastreiche Farbe für den Erfolgstext */
+            display: none; /* Anfangs versteckt */
+        }
+    </style>
+</head>
+<body>
+
+    <h1 style="text-align: center;">Raumverzeichnis</h1>
+
+    <!-- Container mit überlagernden Bildern -->
+    <div class="image-container">
+        <img id="bild1" src="C:\Users\Olivia\OneDrive\Artsysmartsy\Starwarsstory\kreisalleine1.png" alt="Bild 1">
+        <img id="bild2" src="C:\Users\Olivia\OneDrive\Artsysmartsy\Starwarsstory\kreisalleine2.png" alt="Bild 2">
+        <img id="bild3" src="C:\Users\Olivia\OneDrive\Artsysmartsy\Starwarsstory\kreisalleine3.png" alt="Bild 3">
+        <img id="refbild" src="C:\Users\Olivia\OneDrive\Artsysmartsy\Starwarsstory\kreisalleine1.png" alt="Bild 1">
+    </div>
+
+    <!-- Buttons für das Drehen der einzelnen Bilder -->
+    <div class="button-container">
+        <button onclick="rotateLeft('bild1')"> << </button>
+        <button onclick="rotateRight('bild1')"> >> </button>
+    </div>
+    <div class="button-container">
+        <button onclick="rotateLeft('bild2')"> << </button>
+        <button onclick="rotateRight('bild2')"> >> </button>
+    </div>
+    <div class="button-container">
+        <button onclick="rotateLeft('bild3')"> << </button>
+        <button onclick="rotateRight('bild3')"> >> </button>
+    </div>
+
+    <!-- Versteckter Text, der bei erfüllten Bedingungen angezeigt wird -->
+    <div id="hiddenText">Die Eingabe war erfolgreich. Generator 3: Ebene 5, Korridor 3, Deck 17</div>
+
+    <script>
+        // Rotationswinkel für jedes Bild initialisieren
+        let rotationAngles = { bild1: 0, bild2: 0, bild3: 0 };
+
+        function rotateLeft(id) {
+            rotationAngles[id] -= 90;
+            document.getElementById(id).style.transform = `rotate(${rotationAngles[id]}deg)`;
+            checkConditions();
+        }
+
+        function rotateRight(id) {
+            rotationAngles[id] += 90;
+            document.getElementById(id).style.transform = `rotate(${rotationAngles[id]}deg)`;
+            checkConditions();
+        }
+
+        // Funktion, um die Bedingungen zu überprüfen und Text anzuzeigen
+        function checkConditions() {
+            const text = document.getElementById("hiddenText");
+
+            // Normalisieren Sie die Winkel auf den Bereich [0, 360)
+            const bild1Rotation = ((rotationAngles.bild1 % 360) + 360) % 360;
+            const bild2Rotation = ((rotationAngles.bild2 % 360) + 360) % 360;
+            const bild3Rotation = ((rotationAngles.bild3 % 360) + 360) % 360;
+
+            // Bedingung: Bild 1 bei 0 Grad, Bild 2 bei 270 Grad und Bild 3 bei 180 Grad
+            if (bild1Rotation === 0 && bild3Rotation === 270 && bild2Rotation === 180) {
+                text.style.display = "block"; // Text anzeigen
+            } else {
+                text.style.display = "none";  // Text verstecken
+            }
+        }
+    </script>
+
+</body>
+</html>
